@@ -26,14 +26,10 @@ export default function App() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   useEffect(() => {
-    try {
-      setCustomers(getCustomers());
-      setVehicles(getVehicles());
-      setDeals(getDeals());
-      setAppointments(getAppointments());
-    } catch (error) {
-      console.error('Error loading data:', error);
-    }
+    setCustomers(getCustomers());
+    setVehicles(getVehicles());
+    setDeals(getDeals());
+    setAppointments(getAppointments());
   }, []);
 
   const handleSaveCustomers = (data: Customer[]) => {
@@ -77,7 +73,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Mobile overlay */}
       {mobileMenuOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
@@ -85,7 +80,6 @@ export default function App() {
         />
       )}
 
-      {/* Sidebar - hidden on mobile unless menu is open */}
       <div className="hidden lg:block">
         <Sidebar
           activeTab={activeTab}
@@ -95,7 +89,6 @@ export default function App() {
         />
       </div>
 
-      {/* Mobile sidebar */}
       <div className={`lg:hidden fixed inset-y-0 left-0 z-50 transform transition-transform ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <Sidebar
           activeTab={activeTab}
@@ -105,9 +98,7 @@ export default function App() {
         />
       </div>
 
-      {/* Main content */}
       <div className={`transition-all duration-300 ${sidebarCollapsed ? 'lg:ml-16' : 'lg:ml-64'}`}>
-        {/* Top bar */}
         <header className="bg-white border-b border-gray-100 sticky top-0 z-30">
           <div className="flex items-center justify-between px-4 lg:px-6 py-3">
             <div className="flex items-center gap-3">
@@ -141,7 +132,6 @@ export default function App() {
           </div>
         </header>
 
-        {/* Page content */}
         <main className="p-4 lg:p-6">
           {renderContent()}
         </main>
