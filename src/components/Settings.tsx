@@ -163,9 +163,9 @@ export default function Settings() {
             </div>
             <button
               onClick={() => setSettings({ ...settings, enableNotifications: !settings.enableNotifications })}
-              className={`w-11 h-6 rounded-full transition-colors ${settings.enableNotifications ? 'bg-blue-600' : 'bg-gray-200'}`}
+              className={`relative w-11 h-6 rounded-full transition-colors ${settings.enableNotifications ? 'bg-blue-600' : 'bg-gray-300'}`}
             >
-              <div className={`w-5 h-5 bg-white rounded-full shadow transform transition-transform ${settings.enableNotifications ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
+              <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-all ${settings.enableNotifications ? 'translate-x-5' : 'translate-x-0'}`} />
             </button>
           </div>
           <div className="flex items-center justify-between">
@@ -175,9 +175,9 @@ export default function Settings() {
             </div>
             <button
               onClick={() => setSettings({ ...settings, enableEmailAlerts: !settings.enableEmailAlerts })}
-              className={`w-11 h-6 rounded-full transition-colors ${settings.enableEmailAlerts ? 'bg-blue-600' : 'bg-gray-200'}`}
+              className={`relative w-11 h-6 rounded-full transition-colors ${settings.enableEmailAlerts ? 'bg-blue-600' : 'bg-gray-300'}`}
             >
-              <div className={`w-5 h-5 bg-white rounded-full shadow transform transition-transform ${settings.enableEmailAlerts ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
+              <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-all ${settings.enableEmailAlerts ? 'translate-x-5' : 'translate-x-0'}`} />
             </button>
           </div>
           <div className="flex items-center justify-between">
@@ -187,9 +187,9 @@ export default function Settings() {
             </div>
             <button
               onClick={() => setSettings({ ...settings, enableSmsAlerts: !settings.enableSmsAlerts })}
-              className={`w-11 h-6 rounded-full transition-colors ${settings.enableSmsAlerts ? 'bg-blue-600' : 'bg-gray-200'}`}
+              className={`relative w-11 h-6 rounded-full transition-colors ${settings.enableSmsAlerts ? 'bg-blue-600' : 'bg-gray-300'}`}
             >
-              <div className={`w-5 h-5 bg-white rounded-full shadow transform transition-transform ${settings.enableSmsAlerts ? 'translate-x-5.5' : 'translate-x-0.5'}`} />
+              <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-all ${settings.enableSmsAlerts ? 'translate-x-5' : 'translate-x-0'}`} />
             </button>
           </div>
         </div>

@@ -26,10 +26,14 @@ export default function App() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   useEffect(() => {
-    setCustomers(getCustomers());
-    setVehicles(getVehicles());
-    setDeals(getDeals());
-    setAppointments(getAppointments());
+    try {
+      setCustomers(getCustomers());
+      setVehicles(getVehicles());
+      setDeals(getDeals());
+      setAppointments(getAppointments());
+    } catch (error) {
+      console.error('Error loading data:', error);
+    }
   }, []);
 
   const handleSaveCustomers = (data: Customer[]) => {
@@ -82,7 +86,7 @@ export default function App() {
       )}
 
       {/* Sidebar - hidden on mobile unless menu is open */}
-      <div className={`hidden lg:block`}>
+      <div className="hidden lg:block">
         <Sidebar
           activeTab={activeTab}
           setActiveTab={setActiveTab}
