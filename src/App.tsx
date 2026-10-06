@@ -6,6 +6,11 @@ import Inventory from './components/Inventory';
 import Deals from './components/Deals';
 import CalendarView from './components/Calendar';
 import Settings from './components/Settings';
+import Login from './components/Login';
+import UserManagement from './components/UserManagement';
+import AuditLogView from './components/AuditLog';
+import { User } from './types/auth';
+import { getCurrentUser, logout, hasPermission } from './auth';
 import { Customer, Vehicle, Deal, Appointment } from './types';
 import {
   getCustomers, saveCustomers,
@@ -13,9 +18,10 @@ import {
   getDeals, saveDeals,
   getAppointments, saveAppointments,
 } from './data';
-import { Bell, Search, Menu } from 'lucide-react';
+import { Bell, Search, Menu, LogOut } from 'lucide-react';
 
 export default function App() {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -26,11 +32,28 @@ export default function App() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   useEffect(() => {
+    const user = getCurrentUser();
+    if (user) {
+      setCurrentUser(user);
+      setCustomers(getCustomers());
+      setVehicles(getVehicles());
+      setDeals(getDeals());
+      setAppointments(getAppointments());
+    }
+  }, []);
+
+  const handleLogin = (user: User) => {
+    setCurrentUser(user);
     setCustomers(getCustomers());
     setVehicles(getVehicles());
     setDeals(getDeals());
     setAppointments(getAppointments());
-  }, []);
+  };
+
+  const handleLogout = () => {
+    logout();
+    setCurrentUser(null);
+  };
 
   const handleSaveCustomers = (data: Customer[]) => {
     setCustomers(data);
@@ -52,6 +75,11 @@ export default function App() {
     saveAppointments(data);
   };
 
+  // Jeśli nie zalogowany, pokaż ekran logowania
+  if (!currentUser) {
+    return <Login onLogin={handleLogin} />;
+  }
+
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
@@ -64,6 +92,10 @@ export default function App() {
         return <Deals deals={deals} customers={customers} vehicles={vehicles} onSave={handleSaveDeals} />;
       case 'calendar':
         return <CalendarView appointments={appointments} customers={customers} vehicles={vehicles} onSave={handleSaveAppointments} />;
+      case 'users':
+        return hasPermission('users', 'read') ? <UserManagement /> : <div className="text-center py-12 text-gray-500">Brak uprawnień</div>;
+      case 'audit':
+        return hasPermission('settings', 'read') ? <AuditLogView /> : <div className="text-center py-12 text-gray-500">Brak uprawnień</div>;
       case 'settings':
         return <Settings />;
       default:
@@ -86,6 +118,7 @@ export default function App() {
           setActiveTab={setActiveTab}
           collapsed={sidebarCollapsed}
           setCollapsed={setSidebarCollapsed}
+          userRole={currentUser.role}
         />
       </div>
 
@@ -95,6 +128,7 @@ export default function App() {
           setActiveTab={(tab) => { setActiveTab(tab); setMobileMenuOpen(false); }}
           collapsed={false}
           setCollapsed={() => {}}
+          userRole={currentUser.role}
         />
       </div>
 
@@ -124,9 +158,21 @@ export default function App() {
               </button>
               <div className="flex items-center gap-2 pl-3 border-l border-gray-200">
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                  AN
+                  {currentUser.firstName[0]}{currentUser.lastName[0]}
                 </div>
-                <span className="text-sm font-medium text-gray-700 hidden sm:block">Adam Nowicki</span>
+                <div className="hidden sm:block">
+                  <p className="text-sm font-medium text-gray-700">{currentUser.firstName} {currentUser.lastName}</p>
+                  <p className="text-xs text-gray-500">
+                    {currentUser.role === 'admin' ? 'Administrator' : currentUser.role === 'manager' ? 'Manager' : 'Sprzedawca'}
+                  </p>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="ml-2 p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  title="Wyloguj"
+                >
+                  <LogOut size={18} />
+                </button>
               </div>
             </div>
           </div>
